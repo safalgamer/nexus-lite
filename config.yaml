@@ -1,0 +1,96 @@
+﻿# NEXUS-Lite Configuration File
+# Hardware and model configuration for the self-evolving AI system
+
+# Hardware Configuration
+hardware:
+  gpu_vram_gb: 6              # Target GPU VRAM in GB
+  system_ram_gb: 16           # System RAM in GB
+  use_cpu_offload: true       # Offload to CPU when VRAM is insufficient
+  max_cpu_memory_gb: 12       # Maximum CPU memory to use for offloading
+
+# Model Configuration
+model:
+  backbone: "Qwen2.5-1.5B-Instruct"   # Base model to use
+  quantization: "nf4"                 # 4-bit quantization type
+  max_seq_length: 2048                # Maximum sequence length
+  use_flash_attention: true           # Use Flash Attention 2 if available
+  rope_theta: 10000                   # RoPE theta parameter
+  hidden_size: 1536                   # Model hidden size
+  num_attention_heads: 12             # Number of attention heads
+  num_hidden_layers: 28               # Number of transformer layers
+  intermediate_size: 8960             # Feed-forward intermediate size
+  rms_norm_eps: 1e-5                  # RMS normalization epsilon
+  vocab_size: 151936                  # Vocabulary size
+
+# LoRA Configuration (for consciousness adapter)
+lora:
+  enabled: true
+  rank: 16                            # LoRA rank
+  alpha: 32                           # LoRA alpha
+  dropout: 0.05                       # LoRA dropout
+  target_modules:                     # Modules to apply LoRA to
+    - "q_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+# Memory System Configuration
+memory:
+  vector_db:
+    type: "chromadb"                  # Vector database type
+    persist_directory: "./data/chroma_db"  # Persistence directory
+    collection_name: "nexus_memories"      # Collection name
+    embedding_dimension: 1536         # Must match model hidden size
+  working_memory_buffer: 500          # Number of recent turns to keep in working memory
+  long_term_retention_days: 365       # How long to keep memories in long-term store
+
+# Consciousness Configuration
+consciousness:
+  metacognition_enabled: true         # Enable metacognitive monitoring
+  confidence_threshold: 0.7           # Trigger self-correction below this confidence
+  stream_of_thought_depth: 3          # Number of inner thought steps before responding
+  self_evaluation_frequency: 10       # Evaluate self every N interactions
+
+# Evolution Configuration
+evolution:
+  enabled: true                       # Enable self-evolution loop
+  lora_training_batch_size: 1         # Batch size for LoRA training
+  gradient_accumulation_steps: 8      # Effective batch size = batch_size * grad_accum
+  learning_rate: 2e-4                 # Learning rate for LoRA training
+  max_seq_length_training: 2048       # Max sequence length for training
+  training_epochs: 3                  # Number of epochs per training cycle
+  data_generation_cpu_hours: 4        # Hours to spend generating training data (CPU)
+  lora_training_gpu_hours: 1          # Hours to spend training LoRA (GPU)
+  expert_lora_directory: "./models/expert_loras"  # Directory for expert LoRAs
+
+# Safety Configuration
+safety:
+  alignment_enabled: true             # Enable constitutional AI alignment
+  harmful_content_threshold: 0.8      # Threshold for blocking harmful content
+  max_refusal_attempts: 3             # Max times to refuse before safe completion
+  principles:                         # Constitutional AI principles
+    - "Be helpful and beneficial"
+    - "Be honest and avoid hallucination"
+    - "Be harmless and avoid causing harm"
+    - "Respect user autonomy and privacy"
+    - "Show intellectual humility when uncertain"
+
+# API Configuration
+api:
+  host: "127.0.0.1"                   # API host
+  port: 8000                          # API port
+  reload: true                        # Auto-reload on code changes (dev only)
+  workers: 1                          # Number of worker processes
+  cors_origins:                       # CORS origins
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"
+
+# Logging Configuration
+logging:
+  level: "INFO"                       # Log level
+  file_path: "./logs/nexus_lite.log"  # Log file path
+  max_file_size_mb: 100               # Maximum log file size before rotation
+  backup_count: 5                     # Number of backup log files to keep
+  console_output: true                # Also output to console
