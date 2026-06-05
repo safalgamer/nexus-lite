@@ -26,14 +26,8 @@ ALLOWED_EXTENSIONS = {
     '.txt', '.md', '.py', '.js', '.json', '.log', '.csv', '.yml', '.env', '.bat', '.cfg', '.ini', '.sh'
 }
 
-PRIORITY_DIRS = [
-    'C:/Users/safal/Desktop',
-    'C:/Users/safal/Documents',
-    'C:/Users/safal/Downloads',
-    'C:/Users/safal/projects',
-    'C:/Users/safal/my-ai',
-    'C:/nexus-lite',
-]
+PRIORITY_DIRS = os.getenv('NEXUS_PRIORITY_DIRS', 'Desktop,Documents,Downloads,projects').split(',')
+PRIORITY_DIRS = [os.path.join(os.getenv('USERPROFILE', os.getenv('HOME', '')), d.strip()) for d in PRIORITY_DIRS if d.strip()]
 
 # Keep track of visited files
 visited_files = set()
